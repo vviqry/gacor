@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perpustakaan PDKT — Reading Hub</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --panel-hover: #283548;
+      --border: #334155;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.14);
+      --success: #22c55e;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 18px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand h1 {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .progress-bar {
+      width: 110px;
+      height: 7px;
+      background: #0f172a;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--success);
+      transition: width 0.25s ease;
+    }
+
+    .menu-btn {
+      display: none;
+      background: var(--panel-hover);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    /* Main Layout */
+    .layout {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* Sidebar */
+    aside {
+      width: 320px;
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      margin: 4px 2px;
+    }
+
+    .book-card {
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .book-card:hover {
+      background: var(--panel-hover);
+      border-color: #475569;
+    }
+
+    .book-card.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+    }
+
+    .book-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 99px;
+      background: #0f172a;
+      color: var(--accent);
+      border: 1px solid var(--border);
+    }
+
+    .done-pill {
+      font-size: 0.7rem;
+      color: var(--success);
+      font-weight: 600;
+      display: none;
+    }
+
+    .book-card.done .done-pill {
+      display: inline;
+    }
+
+    .book-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .book-desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* Viewer Area */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      background: #0b1120;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 10px 16px;
+      background: #162033;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .current-info h2 {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .current-info p {
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: var(--panel);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: var(--panel-hover);
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0f172a;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background: #7dd3fc;
+    }
+
+    .btn-done.active {
+      background: rgba(34, 197, 94, 0.18);
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .viewer-container {
+      flex: 1;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #1e293b;
+    }
+
+    .mobile-hint {
+      display: none;
+      padding: 8px 14px;
+      background: rgba(56, 189, 248, 0.1);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.76rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* Responsive Mobile */
+    @media (max-width: 820px) {
+      .menu-btn { display: inline-block; }
+      .progress-bar { width: 70px; }
+      .mobile-hint { display: block; }
+
+      aside {
+        position: fixed;
+        top: 53px;
+        bottom: 0;
+        left: 0;
+        width: 85%;
+        max-width: 330px;
+        z-index: 20;
+        transform: translateX(-100%);
+        transition: transform 0.22s ease;
+        box-shadow: 6px 0 24px rgba(0, 0, 0, 0.5);
+      }
+
+      aside.open {
+        transform: translateX(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <button class="menu-btn" id="menuBtn">☰ Daftar PDF</button>
+      <h1>📚 Reading Hub — PDKT</h1>
+    </div>
+    <div class="progress-wrap">
+      <span id="progressText">0/6 Selesai</span>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside id="sidebar">
+      <div class="section-label">Urutan Baca Disarankan</div>
+      <div id="bookList"></div>
+    </aside>
+
+    <main>
+      <div class="toolbar">
+        <div class="current-info">
+          <h2 id="currentTitle">Memuat...</h2>
+          <p id="currentMeta"></p>
+        </div>
+        <div class="actions">
+          <button class="btn" id="prevBtn">← Sebelumnya</button>
+          <button class="btn" id="nextBtn">Selanjutnya →</button>
+          <button class="btn btn-done" id="doneBtn">✓ Tandai Selesai</button>
+          <a class="btn btn-primary" id="openNewTab" href="#" target="_blank" rel="noopener">Buka Tab Baru ↗</a>
+        </div>
+      </div>
+
+      <div class="mobile-hint">
+        Jika PDF tidak muncul di browser HP, klik tombol <strong>"Buka Tab Baru ↗"</strong> di atas.
+      </div>
+
+      <div class="viewer-container">
+        <iframe id="pdfFrame" title="PDF Viewer"></iframe>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const books = [
+      {
+        id: "pdkt-tanpa-drama",
+        step: "Tahap 1 • Utama",
+        title: "PDKT Tanpa Drama",
+        desc: "Mindset dasar PDKT sehat, atasi overthinking, baca sinyal, & jaga harga diri.",
+        file: "PDKT Tanpa Drama.pdf"
+      },
+      {
+        id: "percaya-diri",
+        step: "Tahap 2 • Bonus",
+        title: "Ngobrol Percaya Diri Tanpa Jadi Sok Jago",
+        desc: "Cara tenang saat ngobrol, berhenti berusaha terlihat hebat, & hadapi penolakan.",
+        file: "BONUS_NGOBROL PERCAYA DIRI TANPA JADI SOK JAGO.pdf"
+      },
+      {
+        id: "tanpa-garing",
+        step: "Tahap 3 • Bonus",
+        title: "Ngobrol Tanpa Garing",
+        desc: "Opening natural dari konteks & rumus Respon → Tambahan → Pertanyaan.",
+        file: "BONUS_NGOBROL TANPA GARING.pdf"
+      },
+      {
+        id: "nol-sampai-nyaman",
+        step: "Tahap 4 • Bonus",
+        title: "Chat dari Nol sampai Nyaman",
+        desc: "Panduan lengkap dari chat pertama, timing balas, sampai ajak ketemu langsung.",
+        file: "BONUS_Chat dari Nol sampai Nyaman.pdf"
+      },
+      {
+        id: "100-template",
+        step: "Tahap 5 • Bonus",
+        title: "100 Template Chat yang Menarik & Nyaman",
+        desc: "Kumpulan inspirasi kalimat pembuka, follow-up, humor halus, & ajakan ketemu.",
+        file: "BONUS_100 TEMPLATE CHAT YANG MENARIK & NYAMAN.pdf"
+      },
+      {
+        id: "komunikasi-dewasa",
+        step: "Tahap 6 • Bonus",
+        title: "Komunikasi Dewasa & Berkelas",
+        desc: "Validasi emosi, menjaga batasan sehat, jadi pendengar aktif tanpa tarik-ulur.",
+        file: "BONUS_KOMUNIKASI DEWASA & BERKELAS DENGAN PEREMPUAN.pdf"
+      }
+    ];
+
+    const STORAGE_KEY = "pdkt_reading_progress_v1";
+    let completed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    let currentIndex = 0;
+
+    const bookListEl = document.getElementById("bookList");
+    const pdfFrame = document.getElementById("pdfFrame");
+    const currentTitle = document.getElementById("currentTitle");
+    const currentMeta = document.getElementById("currentMeta");
+    const openNewTab = document.getElementById("openNewTab");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const doneBtn = document.getElementById("doneBtn");
+    const progressText = document.getElementById("progressText");
+    const progressFill = document.getElementById("progressFill");
+    const sidebar = document.getElementById("sidebar");
+    const menuBtn = document.getElementById("menuBtn");
+
+    function renderSidebar() {
+      bookListEl.innerHTML = "";
+      books.forEach((book, idx) => {
+        const isDone = completed.includes(book.id);
+        const card = document.createElement("div");
+        card.className = `book-card ${idx === currentIndex ? "active" : ""} ${isDone ? "done" : ""}`;
+        card.innerHTML = `
+          <div class="book-top">
+            <span class="badge">${book.step}</span>
+            <span class="done-pill">✓ Selesai</span>
+          </div>
+          <div class="book-title">${book.title}</div>
+          <div class="book-desc">${book.desc}</div>
+        `;
+        card.addEventListener("click", () => {
+          selectBook(idx);
+          sidebar.classList.remove("open");
+        });
+        bookListEl.appendChild(card);
+      });
+
+      const pct = Math.round((completed.length / books.length) * 100);
+      progressText.textContent = `${completed.length}/${books.length} Selesai`;
+      progressFill.style.width = `${pct}%`;
+    }
+
+    function selectBook(index) {
+      currentIndex = index;
+      const book = books[index];
+      const safeUrl = "./" + encodeURIComponent(book.file);
+
+      currentTitle.textContent = book.title;
+      currentMeta.textContent = `${book.step} • ${book.file}`;
+      pdfFrame.src = safeUrl;
+      openNewTab.href = safeUrl;
+
+      prevBtn.disabled = index === 0;
+      nextBtn.disabled = index === books.length - 1;
+
+      const isDone = completed.includes(book.id);
+      doneBtn.classList.toggle("active", isDone);
+      doneBtn.textContent = isDone ? "✓ Sudah Dibaca" : "✓ Tandai Selesai";
+
+      renderSidebar();
+    }
+
+    doneBtn.addEventListener("click", () => {
+      const id = books[currentIndex].id;
+      if (completed.includes(id)) {
+        completed = completed.filter(item => item !== id);
+      } else {
+        completed.push(id);
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(completed));
+      selectBook(currentIndex);
+    });
+
+    prevBtn.addEventListener("click", () => {
+      if (currentIndex > 0) selectBook(currentIndex - 1);
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (currentIndex < books.length - 1) selectBook(currentIndex + 1);
+    });
+
+    menuBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("open");
+    });
+
+    selectBook(0);
+  </script>
+</body>
+</html>
