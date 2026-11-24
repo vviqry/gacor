@@ -23,57 +23,32 @@
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
-      height: 100vh;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
 
-    /* Header */
+    /* Top Bar — 1 baris ramping untuk Desktop & Mobile */
     header {
+      height: 50px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      padding: 12px 18px;
+      gap: 8px;
+      padding: 0 12px;
       background: var(--panel);
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
+      z-index: 15;
     }
 
-    .brand {
+    .left-bar {
       display: flex;
       align-items: center;
-      gap: 10px;
-    }
-
-    .brand h1 {
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: 0.2px;
-    }
-
-    .progress-wrap {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.82rem;
-      color: var(--muted);
-    }
-
-    .progress-bar {
-      width: 110px;
-      height: 7px;
-      background: #0f172a;
-      border-radius: 99px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--success);
-      transition: width 0.25s ease;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
     }
 
     .menu-btn {
@@ -81,10 +56,76 @@
       background: var(--panel-hover);
       color: var(--text);
       border: 1px solid var(--border);
-      padding: 6px 10px;
+      width: 34px;
+      height: 34px;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 0.85rem;
+      font-size: 1rem;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .title-wrap {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .current-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .current-sub {
+      font-size: 0.72rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      background: #0f172a;
+      color: var(--text);
+      border: 1px solid var(--border);
+      height: 32px;
+      padding: 0 10px;
+      border-radius: 7px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: background 0.15s;
+    }
+
+    .btn:hover:not(:disabled) { background: var(--panel-hover); }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0f172a;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .btn-done.active {
+      background: rgba(34, 197, 94, 0.18);
+      border-color: var(--success);
+      color: var(--success);
     }
 
     /* Main Layout */
@@ -92,46 +133,58 @@
       display: flex;
       flex: 1;
       min-height: 0;
+      position: relative;
     }
 
     /* Sidebar */
     aside {
-      width: 320px;
+      width: 300px;
       background: var(--panel);
       border-right: 1px solid var(--border);
       overflow-y: auto;
-      padding: 14px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
       flex-shrink: 0;
     }
 
-    .section-label {
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 4px;
+    }
+
+    .sidebar-header h1 {
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .progress-badge {
       font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--muted);
-      margin: 4px 2px;
+      font-weight: 600;
+      color: var(--success);
+      background: rgba(34, 197, 94, 0.12);
+      padding: 3px 8px;
+      border-radius: 99px;
     }
 
     .book-card {
       background: rgba(15, 23, 42, 0.55);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px;
+      border-radius: 9px;
+      padding: 10px 12px;
       cursor: pointer;
-      transition: all 0.18s ease;
+      transition: all 0.16s ease;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
     }
 
-    .book-card:hover {
-      background: var(--panel-hover);
-      border-color: #475569;
-    }
-
+    .book-card:hover { background: var(--panel-hover); }
     .book-card.active {
       background: var(--accent-soft);
       border-color: var(--accent);
@@ -141,123 +194,40 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      font-size: 0.68rem;
     }
 
     .badge {
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 2px 7px;
-      border-radius: 99px;
-      background: #0f172a;
       color: var(--accent);
-      border: 1px solid var(--border);
+      font-weight: 600;
     }
 
     .done-pill {
-      font-size: 0.7rem;
       color: var(--success);
       font-weight: 600;
       display: none;
     }
 
-    .book-card.done .done-pill {
-      display: inline;
-    }
+    .book-card.done .done-pill { display: inline; }
 
     .book-title {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 600;
-      line-height: 1.35;
+      line-height: 1.3;
     }
 
     .book-desc {
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       color: var(--muted);
-      line-height: 1.4;
+      line-height: 1.35;
     }
 
     /* Viewer Area */
     main {
       flex: 1;
       display: flex;
-      flex-direction: column;
       min-width: 0;
       background: #0b1120;
-    }
-
-    .toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 10px 16px;
-      background: #162033;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .current-info h2 {
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
-
-    .current-info p {
-      font-size: 0.76rem;
-      color: var(--muted);
-    }
-
-    .actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      background: var(--panel);
-      color: var(--text);
-      border: 1px solid var(--border);
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.15s;
-    }
-
-    .btn:hover:not(:disabled) {
-      background: var(--panel-hover);
-    }
-
-    .btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #0f172a;
-      border-color: var(--accent);
-      font-weight: 600;
-    }
-
-    .btn-primary:hover {
-      background: #7dd3fc;
-    }
-
-    .btn-done.active {
-      background: rgba(34, 197, 94, 0.18);
-      border-color: var(--success);
-      color: var(--success);
-    }
-
-    .viewer-container {
-      flex: 1;
-      position: relative;
-      display: flex;
-      flex-direction: column;
     }
 
     iframe {
@@ -267,83 +237,108 @@
       background: #1e293b;
     }
 
-    .mobile-hint {
+    /* Backdrop untuk mobile drawer */
+    .backdrop {
       display: none;
-      padding: 8px 14px;
-      background: rgba(56, 189, 248, 0.1);
-      border-bottom: 1px solid var(--border);
-      font-size: 0.76rem;
-      color: var(--muted);
-      text-align: center;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 18;
+    }
+    .backdrop.show { display: block; }
+
+    /* Mode Fokus (Fullscreen PDF) */
+    body.focus-mode header,
+    body.focus-mode aside {
+      display: none !important;
     }
 
-    /* Responsive Mobile */
+    .exit-focus {
+      display: none;
+      position: fixed;
+      top: 10px;
+      right: 12px;
+      z-index: 30;
+      background: rgba(15, 23, 42, 0.85);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+    }
+
+    body.focus-mode .exit-focus { display: inline-flex; }
+
+    /* Mobile Optimization */
     @media (max-width: 820px) {
-      .menu-btn { display: inline-block; }
-      .progress-bar { width: 70px; }
-      .mobile-hint { display: block; }
+      header {
+        height: 46px;
+        padding: 0 8px;
+      }
+
+      .menu-btn { display: inline-flex; }
+      .current-sub { display: none; }
+      .btn-label { display: none; }
+      .btn {
+        padding: 0 8px;
+        height: 30px;
+        font-size: 0.82rem;
+      }
 
       aside {
         position: fixed;
-        top: 53px;
+        top: 0;
         bottom: 0;
         left: 0;
-        width: 85%;
-        max-width: 330px;
-        z-index: 20;
+        width: 82%;
+        max-width: 310px;
+        z-index: 25;
         transform: translateX(-100%);
         transition: transform 0.22s ease;
-        box-shadow: 6px 0 24px rgba(0, 0, 0, 0.5);
+        box-shadow: 6px 0 24px rgba(0, 0, 0, 0.6);
       }
 
-      aside.open {
-        transform: translateX(0);
-      }
+      aside.open { transform: translateX(0); }
     }
   </style>
 </head>
 <body>
 
+  <button class="exit-focus" id="exitFocusBtn">✕ Keluar Fokus</button>
+
   <header>
-    <div class="brand">
-      <button class="menu-btn" id="menuBtn">☰ Daftar PDF</button>
-      <h1>📚 Reading Hub — PDKT</h1>
-    </div>
-    <div class="progress-wrap">
-      <span id="progressText">0/6 Selesai</span>
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
+    <div class="left-bar">
+      <button class="menu-btn" id="menuBtn" title="Daftar PDF">☰</button>
+      <div class="title-wrap">
+        <div class="current-title" id="currentTitle">Memuat...</div>
+        <div class="current-sub" id="currentSub"></div>
       </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn" id="prevBtn" title="Sebelumnya">‹</button>
+      <button class="btn" id="nextBtn" title="Selanjutnya">›</button>
+      <button class="btn btn-done" id="doneBtn" title="Tandai Selesai">✓<span class="btn-label"> Selesai</span></button>
+      <a class="btn btn-primary" id="openNewTab" href="#" target="_blank" rel="noopener" title="Buka Tab Baru">↗<span class="btn-label"> Tab Baru</span></a>
+      <button class="btn" id="focusBtn" title="Mode Fokus Fullscreen">⛶</button>
     </div>
   </header>
 
+  <div class="backdrop" id="backdrop"></div>
+
   <div class="layout">
     <aside id="sidebar">
-      <div class="section-label">Urutan Baca Disarankan</div>
+      <div class="sidebar-header">
+        <h1>📚 Reading Hub</h1>
+        <span class="progress-badge" id="progressText">0/6</span>
+      </div>
       <div id="bookList"></div>
     </aside>
 
     <main>
-      <div class="toolbar">
-        <div class="current-info">
-          <h2 id="currentTitle">Memuat...</h2>
-          <p id="currentMeta"></p>
-        </div>
-        <div class="actions">
-          <button class="btn" id="prevBtn">← Sebelumnya</button>
-          <button class="btn" id="nextBtn">Selanjutnya →</button>
-          <button class="btn btn-done" id="doneBtn">✓ Tandai Selesai</button>
-          <a class="btn btn-primary" id="openNewTab" href="#" target="_blank" rel="noopener">Buka Tab Baru ↗</a>
-        </div>
-      </div>
-
-      <div class="mobile-hint">
-        Jika PDF tidak muncul di browser HP, klik tombol <strong>"Buka Tab Baru ↗"</strong> di atas.
-      </div>
-
-      <div class="viewer-container">
-        <iframe id="pdfFrame" title="PDF Viewer"></iframe>
-      </div>
+      <iframe id="pdfFrame" title="PDF Viewer"></iframe>
     </main>
   </div>
 
@@ -400,15 +395,22 @@
     const bookListEl = document.getElementById("bookList");
     const pdfFrame = document.getElementById("pdfFrame");
     const currentTitle = document.getElementById("currentTitle");
-    const currentMeta = document.getElementById("currentMeta");
+    const currentSub = document.getElementById("currentSub");
     const openNewTab = document.getElementById("openNewTab");
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
     const doneBtn = document.getElementById("doneBtn");
     const progressText = document.getElementById("progressText");
-    const progressFill = document.getElementById("progressFill");
     const sidebar = document.getElementById("sidebar");
+    const backdrop = document.getElementById("backdrop");
     const menuBtn = document.getElementById("menuBtn");
+    const focusBtn = document.getElementById("focusBtn");
+    const exitFocusBtn = document.getElementById("exitFocusBtn");
+
+    function closeDrawer() {
+      sidebar.classList.remove("open");
+      backdrop.classList.remove("show");
+    }
 
     function renderSidebar() {
       bookListEl.innerHTML = "";
@@ -426,14 +428,12 @@
         `;
         card.addEventListener("click", () => {
           selectBook(idx);
-          sidebar.classList.remove("open");
+          closeDrawer();
         });
         bookListEl.appendChild(card);
       });
 
-      const pct = Math.round((completed.length / books.length) * 100);
       progressText.textContent = `${completed.length}/${books.length} Selesai`;
-      progressFill.style.width = `${pct}%`;
     }
 
     function selectBook(index) {
@@ -442,7 +442,7 @@
       const safeUrl = "./" + encodeURIComponent(book.file);
 
       currentTitle.textContent = book.title;
-      currentMeta.textContent = `${book.step} • ${book.file}`;
+      currentSub.textContent = book.step;
       pdfFrame.src = safeUrl;
       openNewTab.href = safeUrl;
 
@@ -451,33 +451,30 @@
 
       const isDone = completed.includes(book.id);
       doneBtn.classList.toggle("active", isDone);
-      doneBtn.textContent = isDone ? "✓ Sudah Dibaca" : "✓ Tandai Selesai";
-
       renderSidebar();
     }
 
     doneBtn.addEventListener("click", () => {
       const id = books[currentIndex].id;
-      if (completed.includes(id)) {
-        completed = completed.filter(item => item !== id);
-      } else {
-        completed.push(id);
-      }
+      completed = completed.includes(id)
+        ? completed.filter(item => item !== id)
+        : [...completed, id];
       localStorage.setItem(STORAGE_KEY, JSON.stringify(completed));
       selectBook(currentIndex);
     });
 
-    prevBtn.addEventListener("click", () => {
-      if (currentIndex > 0) selectBook(currentIndex - 1);
-    });
-
-    nextBtn.addEventListener("click", () => {
-      if (currentIndex < books.length - 1) selectBook(currentIndex + 1);
-    });
+    prevBtn.addEventListener("click", () => { if (currentIndex > 0) selectBook(currentIndex - 1); });
+    nextBtn.addEventListener("click", () => { if (currentIndex < books.length - 1) selectBook(currentIndex + 1); });
 
     menuBtn.addEventListener("click", () => {
       sidebar.classList.toggle("open");
+      backdrop.classList.toggle("show");
     });
+
+    backdrop.addEventListener("click", closeDrawer);
+
+    focusBtn.addEventListener("click", () => document.body.classList.add("focus-mode"));
+    exitFocusBtn.addEventListener("click", () => document.body.classList.remove("focus-mode"));
 
     selectBook(0);
   </script>
